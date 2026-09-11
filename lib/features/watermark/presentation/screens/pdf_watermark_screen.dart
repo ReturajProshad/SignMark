@@ -158,7 +158,14 @@ class _PdfWatermarkScreenState extends ConsumerState<PdfWatermarkScreen>
   }
 
   void _showErrorDialog(BuildContext context, Object? error) {
-    final message = 'Failed to save watermarked PDF: $error';
+    final isReadError = error is FileSystemException &&
+        error.path != null &&
+        !error.path!.contains('Cannot write');
+    final message = isReadError
+        ? 'Couldn\'t read the source PDF: ${error.message}'
+        : error is FileSystemException && error.path == null
+            ? 'Couldn\'t write the output PDF: ${error.message}'
+            : 'Failed to save watermarked PDF: $error';
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
