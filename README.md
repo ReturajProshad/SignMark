@@ -50,12 +50,12 @@ One-paragraph rationale: For a task this size, feature-first + Clean Architectur
 
 | Phase                                   | Estimate | Actual |
 |------------------------------------------|----------|--------|
-| Project scaffold, theme, routing          | 2h       | 2h     |
-| pdf_source feature (pick + page count)    | 2h       | 2h     |
-| Signature screen — UI                     | 3h       | 3h     |
-| Signature screen — PDF embed logic        | 3h       | 3h     |
-| Watermark screen — UI                     | 4h       | 4h     |
-| Watermark screen — PDF embed logic        | 3h       | 3h     |
-| File save/path/permissions plumbing       | 2h       | 2h     |
-| README + cleanup + manual testing         | 2h       | 2h     |
-| **Total**                                 | **21h**  | **21h** |
+| Project scaffold, theme, routing          | 2h       | 1h     |
+| pdf_source feature (pick + page count)    | 2h       | 1h     |
+| Signature screen — UI                     | 3h       | 2h     |
+| Signature screen — PDF embed logic        | 3h       | 2h     |
+| Watermark screen — UI                     | 4h       | 2h     |
+| Watermark screen — PDF embed logic        | 3h       | 2h     |
+| File save/path/permissions plumbing       | 2h       | 1h     |
+| README + cleanup + manual testing         | 2h       | 1h     |
+| **Total**                                 | **21h**  | **12h** |
