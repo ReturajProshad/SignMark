@@ -99,7 +99,10 @@ class _PdfWatermarkScreenState extends ConsumerState<PdfWatermarkScreen>
                       pdfState.hasPdf &&
                       !wmState.saveStatus.isLoading)
                   ? () {
-                      // Phase 6: trigger PDF embed
+                      final sourcePath = pdfState.pdfSource!.path;
+                      ref
+                          .read(watermarkNotifierProvider.notifier)
+                          .applyWatermark(sourcePath);
                     }
                   : null,
             ),

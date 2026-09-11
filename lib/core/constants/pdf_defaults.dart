@@ -23,4 +23,7 @@ abstract final class PdfDefaults {
   static const double watermarkRotationDegrees = 0;
   static const double watermarkMinRotationDegrees = 0;
   static const double watermarkMaxRotationDegrees = 360;
+
+  /// Margin from page edges for watermark placement, in points.
+  static const double watermarkBottomMarginPts = 48;
 }
