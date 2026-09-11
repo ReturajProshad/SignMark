@@ -1,4 +1,4 @@
-name: pdf_editor
+name: signmark
 description: "SignMark — pick a PDF and add a typed signature or a text watermark, then save a real modified PDF."
 
 publish_to: "none"
@@ -26,6 +26,12 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
 
 flutter:
   uses-material-design: true

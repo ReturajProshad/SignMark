@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "pdf_editor" "\0"
+            VALUE "CompanyName", "signmark" "\0"
+            VALUE "FileDescription", "signmark" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "pdf_editor" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "pdf_editor.exe" "\0"
-            VALUE "ProductName", "pdf_editor" "\0"
+            VALUE "InternalName", "signmark" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 signmark. All rights reserved." "\0"
+            VALUE "OriginalFilename", "signmark.exe" "\0"
+            VALUE "ProductName", "signmark" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

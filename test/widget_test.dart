@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:pdf_editor/app.dart';
+import 'package:signmark/app.dart';
 
 /// Sizes the test surface to the design size (375×812) so `flutter_screenutil`
 /// scales 1:1, matching the phone layout the app is designed for.
@@ -16,8 +16,9 @@ void _usePortraitPhone(WidgetTester tester) {
 }
 
 void main() {
-  testWidgets('Home screen renders title and both entry points',
-      (WidgetTester tester) async {
+  testWidgets('Home screen renders title and both entry points', (
+    WidgetTester tester,
+  ) async {
     _usePortraitPhone(tester);
 
     await tester.pumpWidget(const ProviderScope(child: SignMarkApp()));
@@ -28,8 +29,9 @@ void main() {
     expect(find.text('Add Watermark'), findsOneWidget);
   });
 
-  testWidgets('Tapping "Add Signature" navigates to the signature screen',
-      (WidgetTester tester) async {
+  testWidgets('Tapping "Add Signature" navigates to the signature screen', (
+    WidgetTester tester,
+  ) async {
     _usePortraitPhone(tester);
 
     await tester.pumpWidget(const ProviderScope(child: SignMarkApp()));
