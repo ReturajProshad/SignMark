@@ -1,81 +1,28 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/constants/pdf_defaults.dart';
-import '../../domain/entities/signature_config.dart';
+import '../../data/repositories/signature_repository_impl.dart';
+import '../../data/services/pdf_signature_service.dart';
+import '../../domain/usecases/embed_signature_usecase.dart';
+import 'signature_state.dart';
 
-@immutable
-class SignatureState {
-  const SignatureState({
-    this.name = '',
-    this.fontIndex = 0,
-    this.fontSizePt = PdfDefaults.signatureFontSize,
-    this.isBold = false,
-    this.colorHex = _defaultColorHex,
-    this.saveStatus = const AsyncValue<String>.data(''),
-  });
-
-  static const String _defaultColorHex = 'FF1A1A1A';
-
-  final String name;
-
-  final int fontIndex;
-
-  final double fontSizePt;
-
-  final bool isBold;
-
-  final String colorHex;
-
-  final AsyncValue<String> saveStatus;
-
-  SignatureFont get selectedFont => SignatureFont.all[fontIndex];
-
-  Color get color => Color(int.parse(colorHex, radix: 16));
-
-  bool get canSubmit => name.trim().isNotEmpty;
-
-  SignatureState copyWith({
-    String? name,
-    int? fontIndex,
-    double? fontSizePt,
-    bool? isBold,
-    String? colorHex,
-    AsyncValue<String>? saveStatus,
-  }) {
-    return SignatureState(
-      name: name ?? this.name,
-      fontIndex: fontIndex ?? this.fontIndex,
-      fontSizePt: fontSizePt ?? this.fontSizePt,
-      isBold: isBold ?? this.isBold,
-      colorHex: colorHex ?? this.colorHex,
-      saveStatus: saveStatus ?? this.saveStatus,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SignatureState &&
-          runtimeType == other.runtimeType &&
-          name == other.name &&
-          fontIndex == other.fontIndex &&
-          fontSizePt == other.fontSizePt &&
-          isBold == other.isBold &&
-          colorHex == other.colorHex &&
-          saveStatus == other.saveStatus;
-
-  @override
-  int get hashCode =>
-      Object.hash(name, fontIndex, fontSizePt, isBold, colorHex, saveStatus);
-}
+export 'signature_state.dart';
 
 final signatureNotifierProvider =
     NotifierProvider<SignatureNotifier, SignatureState>(SignatureNotifier.new);
 
 class SignatureNotifier extends Notifier<SignatureState> {
+  late final EmbedSignatureUseCase _embedSignatureUseCase;
+
   @override
-  SignatureState build() => const SignatureState();
+  SignatureState build() {
+    _embedSignatureUseCase = EmbedSignatureUseCase(
+      SignatureRepositoryImpl(
+        signatureService: const PdfSignatureService(),
+      ),
+    );
+    return const SignatureState();
+  }
 
   void setName(String value) {
     state = state.copyWith(name: value);
@@ -97,7 +44,41 @@ class SignatureNotifier extends Notifier<SignatureState> {
     state = state.copyWith(colorHex: hex);
   }
 
-  void setSaveStatus(AsyncValue<String> status) {
-    state = state.copyWith(saveStatus: status);
+  Future<void> embedSignature(String sourcePdfPath) async {
+    state = state.copyWith(saveStatus: const AsyncValue<String>.loading());
+
+    try {
+      final selectedFont = state.selectedFont;
+      final fontBytes = await _loadFontBytes(selectedFont.assetFileName);
+
+      final color = state.color;
+      final colorArgb = color.toARGB32();
+
+      final savedPath = await _embedSignatureUseCase.call(
+        sourcePdfPath: sourcePdfPath,
+        name: state.name.trim(),
+        fontFileBytes: fontBytes,
+        fontSizePt: state.fontSizePt,
+        isBold: state.isBold,
+        colorArgb: colorArgb,
+      );
+
+      state = state.copyWith(
+        saveStatus: AsyncValue<String>.data(savedPath),
+      );
+    } catch (e, st) {
+      state = state.copyWith(
+        saveStatus: AsyncValue<String>.error(e, st),
+      );
+    }
+  }
+
+  Future<Uint8List> _loadFontBytes(String fontFamily) async {
+    final assetPath = 'assets/fonts/$fontFamily';
+    final byteData = await rootBundle.load(assetPath);
+    return byteData.buffer.asUint8List(
+      byteData.offsetInBytes,
+      byteData.lengthInBytes,
+    );
   }
 }
